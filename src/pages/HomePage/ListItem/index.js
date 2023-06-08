@@ -1,4 +1,5 @@
 import './style.css';
+import { updateShoppingItem, getShoppingItemById } from '../../../functions/db.js'
 
 export const ListItem = (props) => {
   const { id, done, product, amount, unit } = props;
@@ -18,8 +19,15 @@ export const ListItem = (props) => {
     </div>
   `;
 
-  const handleTick = () => {
+  const handleTick = (id, done) => {
     // zde je potřeba zařídit změnu stavu položky
+    updateShoppingItem(id, done)
+    .then(() => {
+      return getShoppingItemById(id);
+    })
+    .then((item) => {
+      element.querySelector('.btn-tick').classList.toggle('btn-tick--on', item.done);
+    })
   };
 
   element.querySelector('.btn-tick').addEventListener('click', handleTick);
